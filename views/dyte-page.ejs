@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="/css/dyte.css" />
+    <title>Dyte Example App</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script src="/js/dyte.js"></script>
+    <script>
+      const meetingUserAuthToken = "<%=authToken%>";
+      const meetingAuth = { token: meetingUserAuthToken };
+
+      const client = new DyteClient("a979d600-6087-4d97-b11b-345ff22e9177");
+      const success = client.connect();
+
+      const config = new client.DefaultConfig();
+      config.showSelfInWaitingRoom(false);
+      config.setWaitingRoomElement(
+        '<iframe width="560" height="315" src="https://www.youtube.com/embed/kYwonbqT4TE" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>'
+      );
+
+      const meeting = client.Meeting( "<%=roomName%>", meetingAuth);
+
+      meeting.init("root", window.innerHeight, window.innerWidth);
+      /*
+	  	MeetingComponent = Meeting.getComponent()
+		  or <MeetingComponent />
+
+		meeting.on('peer-join', (peer) => {
+
+	  	} );
+	  */
+    </script>
+  </body>
+</html>
