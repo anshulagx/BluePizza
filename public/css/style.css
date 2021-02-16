@@ -1,8 +1,48 @@
-body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+html, body, #root {
+  height: 100%;
+  margin: 0;
+}
+
+html {
+  font-family: sans-serif;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 a {
   color: #00B7FF;
+}
+
+h4 {
+  margin: 0.2rem;
+}
+
+body {
+  background-color: rgb(26, 26, 26);
+  color: #E0E0E0;
+}
+
+.create-meeting-form {
+  width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.create-meeting-input {
+  width: 20%;
+  min-width: 100px;
+}
+
+.create-meeting-button {
+  margin-left: 1rem;
+}
+
+.join-meeting-button {
+  width: 20%;
+  min-width: 100px;
 }
