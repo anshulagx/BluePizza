@@ -12,7 +12,7 @@
     <a href="https://docs.dyte.in"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://app.dyte.in">View Demo</a>
+    <a href="https://dyte-web-example.herokuapp.com/">View Demo</a>
     ·
     <a href="https://github.com/dyte-in/web-integration-example/issues">Report Bug</a>
     ·
@@ -41,7 +41,7 @@
 A basic express js project demonstrating how you can integrate your website with dyte.
 ![very-basic](docs/site.png)
 
-It creates a new dyte meeting and then allows to join it as a participant or a host.
+It creates a new dyte meeting and then allows to join it as a participant or a host. A demo is hosted on https://dyte-web-example.herokuapp.com/
 
 ### Built With
 
