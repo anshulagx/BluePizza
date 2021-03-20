@@ -1,7 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const axios = require('axios');
+const mongoose = require('mongoose');
 
+var rawModel = require('../models/raw.js');
 const orgId = process.env.DYTE_ORG_ID;
 const apiKey = process.env.DYTE_API_KEY;
 const baseURL = process.env.DYTE_API_BASE_URL;
@@ -10,6 +12,42 @@ if(!orgId || !apiKey || !baseURL) {
   console.error("Define org id, API key and base URL to run this app.\nGet one from https://dev.dyte.in/");
   process.exit(0);
 }
+
+function connectToDB() {
+  //Set up mongoose connection
+  var mongoDB = process.env.MONGODB_URL;
+  mongoose.connect(mongoDB, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  });
+  var db = mongoose.connection;
+  db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+
+}
+
+connectToDB();
+mongoWrite("hello","hello","hello","hello")
+function mongoWrite(trigger, type, studentID, meetingID){
+ //send html webpage
+ let data={
+  "trigger":trigger,
+  "type":type,
+  "studentID":studentID,
+  "meetingID":meetingID,
+  "timestamp":new Date()
+};
+
+// var raw = new rawModel(data);
+// raw.save(function(err, obj) {
+//   if (err) {
+//     console.log("Write Success");
+//     return res.status(500).send(err);
+//   }
+//   console.log("Emotion Added");
+//   return res.status(200).send(obj);
+//   });
+}
+
 
 /**
  * This exmaples creates a new meeting and then allow you to join that meeting as host participant.
@@ -20,6 +58,10 @@ if(!orgId || !apiKey || !baseURL) {
 
 router.get('/', function (req, res, next) {
   res.render('index');
+});
+
+router.get('/event', function (req, res, next) {
+  
 });
 
 router.post('/meeting', async function (req, res, next) {
@@ -63,7 +105,6 @@ router.get('/participant', async function (req, res, next) {
   const authToken = authResponse.authToken;
   res.render('dyte-page', { type: "teacher", roomName , authToken, orgId, baseURL });
 });
-
 
 router.get('/host', async function (req, res, next) {
   //1. Get the meeting ID from the request
