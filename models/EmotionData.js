@@ -11,9 +11,27 @@ var EmotionDataSchema = new Schema(
       "type": "String"
     },
     "emotions": {
-      "type": [
-        "Number"
-      ]
+      "angry": {
+        "type": "Number"
+      },
+      "disgust": {
+        "type": "Number"
+      },
+      "fear": {
+        "type": "Number"
+      },
+      "happy": {
+        "type": "Number"
+      },
+      "sad": {
+        "type": "Number"
+      },
+      "surprise": {
+        "type": "Number"
+      },
+      "neutral": {
+        "type": "Number"
+      }
     },
     "isPresent": {
       "type": "Boolean"
