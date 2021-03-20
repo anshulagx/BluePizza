@@ -4,6 +4,7 @@ const axios = require('axios');
 const mongoose = require('mongoose');
 
 var rawModel = require('../models/raw.js');
+var EmotionDataModel = require('../models/EmotionData.js')
 const orgId = process.env.DYTE_ORG_ID;
 const apiKey = process.env.DYTE_API_KEY;
 const baseURL = process.env.DYTE_API_BASE_URL;
@@ -26,8 +27,7 @@ function connectToDB() {
 }
 
 connectToDB();
-mongoWrite("hello","hello","hello","hello")
-function mongoWrite(trigger, type, studentID, meetingID){
+function mongoWrite(trigger, type, studentID, meetingID, res){
  //send html webpage
  let data={
   "trigger":trigger,
@@ -37,15 +37,15 @@ function mongoWrite(trigger, type, studentID, meetingID){
   "timestamp":new Date()
 };
 
-// var raw = new rawModel(data);
-// raw.save(function(err, obj) {
-//   if (err) {
-//     console.log("Write Success");
-//     return res.status(500).send(err);
-//   }
-//   console.log("Emotion Added");
-//   return res.status(200).send(obj);
-//   });
+var raw = new rawModel(data);
+raw.save(function(err, obj) {
+  if (err) {
+    console.log("Write Failed");
+    return res.status(500).send(err);
+  }
+  console.log("Data Written");
+  return res.status(200).send(obj);
+  });
 }
 
 
@@ -61,7 +61,8 @@ router.get('/', function (req, res, next) {
 });
 
 router.get('/event', function (req, res, next) {
-  
+  let a = req.query.trigger,b = req.query.type,c=req.query.meetingID,d=req.query.hostID;
+  mongoWrite(a,b,d,c,res);
 });
 
 router.post('/meeting', async function (req, res, next) {
@@ -131,6 +132,25 @@ router.get('/host', async function (req, res, next) {
   res.render('dyte-page', { type: "teacher", roomName , authToken, orgId, baseURL });
 });
 
+function writeEmotions(data, res){
 
+  var emotionData = new EmotionDataModel(data);
+
+  emotionData.save(function(err, obj) {
+    if (err) {
+      console.log("New emotion creation failed");
+      return res.status(500).send(err);
+    }
+    console.log("Emotion Added");
+    return res.status(200).send(obj);
+  });
+
+}
+
+
+router.post("/postExpData",(req, res) => {
+  console.log(req.body);
+  writeEmotions(req.body, res);
+});
 
 module.exports = router;

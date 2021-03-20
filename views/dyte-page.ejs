@@ -34,12 +34,14 @@
           if(flag==0){//unmuted
             flag=1;
             console.log("unmute");
+            sendData('on','voice',meeting.self.name,meeting.self.id);
           }
         }
         else{
           if(flag==1){//muted
             flag=0;
             console.log("mute");
+            sendData('off','voice',meeting.self.name,meeting.self.id);
           }
         }
         setTimeout(addMe, 2000);
