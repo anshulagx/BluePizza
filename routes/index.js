@@ -3,6 +3,9 @@ const router = express.Router();
 const axios = require('axios');
 const mongoose = require('mongoose');
 
+var EmotionDataModel = require('../../models/EmotionData.js')
+
+
 var rawModel = require('../models/raw.js');
 const orgId = process.env.DYTE_ORG_ID;
 const apiKey = process.env.DYTE_API_KEY;
@@ -131,6 +134,30 @@ router.get('/host', async function (req, res, next) {
   res.render('dyte-page', { type: "teacher", roomName , authToken, orgId, baseURL });
 });
 
+
+
+function writeEmotions(data, res){
+
+
+  var emotionData = new EmotionDataModel(data);
+
+  emotionData.save(function(err, obj) {
+    if (err) {
+      console.log("New emotuon creation failed");
+      return res.status(500).send(err);
+    }
+    console.log("Emotion Added");
+    return res.status(200).send(obj);
+  });
+
+}
+
+
+
+router.post("/postExpData",(req, res) => {
+  console.log(req.body);
+  writeEmotions(req.body, res);
+});
 
 
 module.exports = router;
