@@ -3,7 +3,7 @@ const router = express.Router();
 const axios = require('axios');
 const mongoose = require('mongoose');
 
-var EmotionDataModel = require('../../models/EmotionData.js')
+var EmotionDataModel = require('../models/EmotionData.js')
 
 
 var rawModel = require('../models/raw.js');
