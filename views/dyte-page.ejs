@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="https://cdn.dyte.in/lib/dyte.css" />
+    <title>Example App</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script src="https://cdn.dyte.in/lib/dyte.js"></script>
+    <script>
+      const meetingUserAuthToken = "<%=authToken%>";
+      const client = new DyteClient({clientId: '<%=orgId%>'});
+      const success = client.connect();
+      const meeting = client.Meeting({
+        roomName: '<%=roomName%>',
+        authToken: meetingUserAuthToken,
+        apiBase: '<%=baseURL%>'
+      });
+      var flag=0;//mute
+
+      function sendData(trigger,type,hostID,meetingID){
+        const http = new XMLHttpRequest();
+        const trig='/event?trigger='+trigger+'&type='+type+'&hostID='+hostID+'&meetingID='+meetingID;
+        http.open("GET",trig);
+        http.send();
+        http.onreadystatechange = (e) => {
+          console.log(http.responseText)
+        }
+      }
+      
+      function addMe(){
+        if(meeting.self.audioEnabled){
+          if(flag==0){//unmuted
+            flag=1;
+            console.log("unmute");
+          }
+        }
+        else{
+          if(flag==1){//muted
+            flag=0;
+            console.log("mute");
+          }
+        }
+        setTimeout(addMe, 2000);
+      }
+      meeting.init("root");
+      setTimeout(addMe, 2000);
+    </script>
+  </body>
+</html>
