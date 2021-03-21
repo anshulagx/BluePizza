@@ -4,9 +4,6 @@ var Schema = mongoose.Schema;
 
 var EmotionDataSchema = new Schema(
   {
-    "timestamp": {
-      "type": "String"
-    },
     "userId": {
       "type": "String"
     },
@@ -31,11 +28,17 @@ var EmotionDataSchema = new Schema(
       },
       "neutral": {
         "type": "Number"
+      },
+      "degree": {
+        "type": "Number"
       }
     },
     "isPresent": {
-      "type": "Boolean"
+      "type": "String"
+    },
+    "timestamp": {
+      "type": "Date"
     }
   });
 //Export model
-module.exports = mongoose.model('EmotionData', EmotionDataSchema);
+module.exports = mongoose.model('emotions_data', EmotionDataSchema);

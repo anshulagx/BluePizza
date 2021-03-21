@@ -12,8 +12,9 @@
     "dotenv": "^8.2.0",
     "ejs": "~2.6.1",
     "express": "~4.16.1",
-    "mongoose": "^5.11.19",
     "http-errors": "~1.6.3",
+    "mongodb": "^3.6.5",
+    "mongoose": "^5.11.19",
     "morgan": "~1.9.1"
   }
 }

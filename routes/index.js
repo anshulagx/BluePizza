@@ -2,9 +2,10 @@ const express = require('express');
 const router = express.Router();
 const axios = require('axios');
 const mongoose = require('mongoose');
+var MongoClient = require('mongodb').MongoClient;
 
 var rawModel = require('../models/raw.js');
-var EmotionDataModel = require('../models/EmotionData.js')
+var EmotionDataModel = require('../models/Emotions_Data.js')
 const orgId = process.env.DYTE_ORG_ID;
 const apiKey = process.env.DYTE_API_KEY;
 const baseURL = process.env.DYTE_API_BASE_URL;
@@ -13,6 +14,35 @@ if(!orgId || !apiKey || !baseURL) {
   console.error("Define org id, API key and base URL to run this app.\nGet one from https://dev.dyte.in/");
   process.exit(0);
 }
+
+function readfromDB(res){
+  MongoClient.connect(process.env.MONGODB_URL, function(err, db) {
+    if (err) throw err;
+    var dbo = db.db("lera");
+    var mysort = { timestamp: -1 };
+    dbo.collection("emotions_data").find({}).sort(mysort).toArray(function(err, result) {
+      if (err) throw err;
+      let avg = 0,c=0;
+      console.log(result[0].emotions.degree);
+      for(var i=0;i<3;i++){
+        if(result[i].emotions.degree){
+          c++;
+          avg+=result[i].emotions.degree;
+        }
+      }
+      avg/=c;
+      //-2 to 2 neutral
+      //2 to 8 happy
+      //-8 to -2 sad
+      db.close();
+      console.log(avg);
+      if(avg>2) return(res.status(200).send("Happy"))
+      else if(avg<=2 && avg>-2) return(res.status(200).send("Neutral"))
+      else if(avg<2) return(res.status(200).send("Sad"))
+    });
+  });
+}
+
 
 function connectToDB() {
   //Set up mongoose connection
@@ -60,6 +90,10 @@ router.get('/', function (req, res, next) {
   res.render('index');
 });
 
+router.get('/something', function (req, res, next){
+  readfromDB(res);
+});
+
 router.get('/event', function (req, res, next) {
   let a = req.query.trigger,b = req.query.type,c=req.query.meetingID,d=req.query.hostID;
   mongoWrite(a,b,d,c,res);
@@ -93,7 +127,7 @@ router.get('/participant', async function (req, res, next) {
   const resp = await axios.post(`${baseURL}/v1/organizations/${orgId}/meetings/${meetingId}/participant`, {
     clientSpecificId: Math.random().toString(36).substring(7),
     userDetails: {
-      "name": "Participant" + Math.random().toString(36).substring(2)
+      "name": "Student" + Math.random().toString(36).substring(2)
     },
   }, {
     headers: {
@@ -117,7 +151,7 @@ router.get('/host', async function (req, res, next) {
   const resp = await axios.post(`${baseURL}/v1/organizations/${orgId}/meetings/${meetingId}/participant`, {
     clientSpecificId: Math.random().toString(36).substring(7),
     userDetails: {
-      "name": "Host" + Math.random().toString(36).substring(2)
+      "name": "Teacher" + Math.random().toString(36).substring(2)
     },
     roleName: "host"
   }, {
